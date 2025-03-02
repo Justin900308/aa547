@@ -15,7 +15,7 @@ eps2 = 0.1; %case 2
 eps3 = 0.4; %case 3
 eps = eps3;
 
-N=10;
+N=1000;
 t0 = 0;
 tf = 1;
 dt = 0.01;
@@ -23,7 +23,6 @@ T = tf / dt;
 t_all = linspace(t0, tf, T+1);
 mean = pi / 2;
 std = pi / 8;
-phi = std.*randn(T+1, 1) + mean;
 
 % Create empty data
 x_total=zeros(N,2,T+1);
@@ -37,12 +36,15 @@ error_star2_total=zeros(N,1,T+1);
 %% Create x(t) y(t)
 
 for i =1:N
+    phi = std.*randn(T+1, 1) + mean;
     [x,y]=xtyt_fun(t_all,T,x0,eps,phi);
     x_total(i,:,:)=x;
     y_total(i,:,:)=y;
 end
 %% Generate estimation 
 for i=1:N
+    x=reshape(x_total(i,:,:),[2,T+1]);
+    y=reshape(y_total(i,:,:),[1,T+1]);
     [x_bar,error_bar]=x_bar_fun(x0,T,y,dt,x);
     [x_star1,error_star1]=x_star_1_fun(x0,T,t_all,phi,eps,tf,x);
     [x_star2, error_star2]=x_star2_fun(x0,T,t_all,x);
@@ -67,7 +69,7 @@ set(gca, 'YScale', 'log')
 legend('$\bar{e}$','$e^{*1}$','$e^{*2}$','Interpreter','latex')
 xlabel('time')
 ylabel('value')
-title('Last run error vs t,$\epsilon = 0.4$, mean = $\frac{\pi}{2}$, $\sigma = \frac{\pi}{8}$','Interpreter','latex')
+title('Last run error vs t,$\epsilon = 0$, mean = $\frac{\pi}{2}$, $\sigma = \frac{\pi}{8}$','Interpreter','latex')
 s=2;
 %%
 
